@@ -74,7 +74,7 @@ export default function LoginScreen({navigation}) {
       }
       else {
         const response = await post(
-          'https://tails1101.cafe24.com/test/signin_post_json.php',
+          '(URL 입력)',
           {
             username: usernameTxt,
             password: passwordTxt,
