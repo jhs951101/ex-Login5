@@ -1,0 +1,5 @@
+expo install react-native-gesture-handler 
+
+npm install [or: yarn add] @react-navigation/native --save
+npm install [or: yarn add] @react-navigation/stack --save
+npm install [or: yarn add] axios --save

@@ -1,10 +1,9 @@
-import 'react-native-gesture-handler';
 import React, {Component} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import LoginScreen from './pages/login';
-import UserInfoScreen from './pages/userinfo';
+import LoginScreen from './js/view/login';
+import UserInfoScreen from './js/view/userinfo';
 
 const Stack = createStackNavigator();
 

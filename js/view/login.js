@@ -1,9 +1,11 @@
-import 'react-native-gesture-handler';
-import React, {useState} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, Alert,
-  BackHandler, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import React, { useState } from 'react';
+import {
+  StyleSheet, View, Text, TextInput, Button, Alert, BackHandler, TouchableWithoutFeedback, Keyboard
+} from 'react-native';
 
-  export default function LoginScreen({navigation}) {
+import axios from 'axios';
+
+export default function LoginScreen({navigation}) {
 
   const [usernameTxt, setUsernameTxt] = useState('');
   const [passwordTxt, setPasswordTxt] = useState('');
@@ -16,53 +18,88 @@ import {StyleSheet, View, Text, TextInput, Button, Alert,
       setPasswordTxt(val);
   }
 
+  const get = async (originalUrl, data) => {
+    var result = null;
+
+    var url = originalUrl;
+    var first = true;
+
+    for(var key in data){
+      var conn = '&';
+
+      if (first){
+          conn = '?';
+      }
+
+      url += (conn + key + "=" + data[key]);
+      first = false;
+    }
+
+    const response = await axios.get(url);
+    
+    if(response.status == 200){
+      result = response.data;
+    }
+
+    return result;
+  }
+
+  const post = async (originalUrl, data) => {
+    var result = null;
+
+    const response = await axios.post(
+      originalUrl,
+        JSON.stringify(data),
+        { headers: { 'Content-Type': 'application/json'} }
+      );
+    
+    if(response.status == 200){
+      result = response.data;
+    }
+
+    return result;
+  }
+
   const submitHandler = async (usernameTxt, passwordTxt) => {
 
-    try {
       if(usernameTxt.length < 1){
-        Alert.alert('WAIT!', '아이디를 입력하십시오', [
+        Alert.alert('Error', '아이디를 입력하십시오', [
           {text: '확인'}
         ]);
       }
       else if(passwordTxt.length < 1){
-        Alert.alert('WAIT!', '비밀번호를 입력하십시오', [
+        Alert.alert('Error', '비밀번호를 입력하십시오', [
           {text: '확인'}
         ]);
       }
       else {
-        const response = await fetch('(주소 입력)', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        const response = await post(
+          'https://tails1101.cafe24.com/test/signin_post_json.php',
+          {
             username: usernameTxt,
             password: passwordTxt,
-          })
-        });
-        const json = await response.json();
+          }
+        );
 
-        if(json.success){
-          navigation.navigate('UserInfo', {
-            username: json.username,
-            name: json.name,
-            gender: json.gender,
-          });
-        }
-        else {
-          Alert.alert('ERROR!', '아이디 또는 비밀번호가 일치하지 않습니다', [
+        if(response == null){
+          Alert.alert('Error', '통신 중 오류가 발생하였습니다', [
             {text: '확인'}
           ]);
         }
+        else{
+          if(response.success){
+            navigation.navigate('UserInfo', {
+              username: usernameTxt,
+              name: response.name,
+            });
+          }
+          else{
+            Alert.alert('Error', '아이디 또는 비밀번호가 일치하지 않습니다', [
+              {text: '확인'}
+            ]);
+          }
+        }
       }
-
-    } catch (error) {
-      console.error(error);
-      Alert.alert('ERROR!', '네트워크 연결을 확인하십시오', [
-        {text: '확인'}
-      ]);
-    }
   }
 
   const quitHandler = () => {

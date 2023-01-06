@@ -1,6 +1,5 @@
-import 'react-native-gesture-handler';
 import React from 'react';
-import {View, Text, Button} from 'react-native';
+import { View, Text, Button } from 'react-native';
 
 export default function UserInfoScreen({route, navigation}) {
 
@@ -8,7 +7,8 @@ export default function UserInfoScreen({route, navigation}) {
 
   return(
     <View>
-      <Text>아이디: {username}, 이름: {name}, 성별: {gender}</Text>
+      <Text>이름: {name}</Text>
+      <Text>아이디: {username}</Text>
       <Text>Curation Screen</Text>
       <Button
         title="Log Out"
